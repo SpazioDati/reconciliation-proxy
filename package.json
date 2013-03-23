@@ -1,7 +1,7 @@
 {
   "name": "reconciliation-proxy",
   "description": "Reconciliation service for (Open|Google)Refine that acts as a proxy",
-  "version": "0.1",
+  "version": "0.1.0",
   "maintainers": [
     {
       "name": "Federico \"fox\" Scrinzi",
