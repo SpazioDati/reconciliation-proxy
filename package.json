@@ -1,0 +1,24 @@
+{
+  "name": "reconciliation-proxy",
+  "description": "Reconciliation service for (Open|Google)Refine that acts as a proxy",
+  "version": "0.1",
+  "maintainers": [
+    {
+      "name": "Federico \"fox\" Scrinzi",
+      "email": "scrinzi@spaziodati.eu",
+      "web": ""
+    }
+  ],
+  "dependencies": {
+    "express": "~3.1.0",
+    "node-cache": "~0.3.2",
+    "request": "~2.16.6",
+    "async": "~0.2.6"
+  },
+  "licenses": [
+    {
+      "name": "WTFPL",
+      "url": "http://www.wtfpl.net/"
+    }
+  ]
+}
