@@ -27,14 +27,14 @@ var process_url = function (url, key) {
         });
       }
     });
-  }
+  };
 };
 
 var output_format = function (body) {
-  obj = {
+  return {
     result: [{
       id: body,
-      name: body,
+      name: body.substring(0, 255),
       match: true,
       score: 100,
       type: [{
@@ -43,46 +43,46 @@ var output_format = function (body) {
       }]
     }]
   };
-  return obj;
 };
 
 var process_query = function (query, res) {
   var functions = [];
+
   if (typeof(query) === 'string') {
     functions.push(process_url(query));
   }
   else if (typeof(query) === 'object') {
-    for (var key in query) {
-      var url = query[key].query || query[key];
-      functions.push(process_url(url, key));
-    }
+    Object.keys(query).forEach(function (k) {
+      var url = query[k].query || query[k];
+      functions.push(process_url(url, k));
+    });
   }
 
   async.parallel(functions, function (err, results) {
-    if (!err) {
-      if (results.length === 1) {
-        if (results[0].statusCode >= 200 && results[0].statusCode <= 299) {
-          res.jsonp(output_format(results[0].body));
-        }
-        else {
-          res.jsonp({'result': []});
-        }
+    if (err)
+      return;
+
+    if (results.length === 1) {
+      if (results[0].statusCode >= 200 && results[0].statusCode <= 299) {
+        res.jsonp(output_format(results[0].body));
       }
       else {
-        var obj = {};
-        for (var i=0; i<results.length; i++) {
-          current = results[i];
-          if (current.statusCode >= 200 && current.statusCode <= 299) {
-            obj[current.key] = output_format(current.body);
-          }
-          else {
-            obj[current.key] = {result: []};
-          }
-        }
-        res.jsonp(obj);
+        res.jsonp({'result': []});
       }
     }
-  })
+    else {
+      var obj = {};
+      results.forEach(function (el) {
+        if (el.statusCode >= 200 && el.statusCode <= 299) {
+          obj[el.key] = output_format(el.body);
+        }
+        else {
+          obj[el.key] = {result: []};
+        }
+      });
+      res.jsonp(obj);
+    }
+  });
 };
 
 app.all('/reconcile', function(req, res) {
