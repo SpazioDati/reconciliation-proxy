@@ -109,4 +109,4 @@ app.all('/reconcile', function(req, res) {
     });
 });
 
-app.listen(process.env.RECONCILIATION_PROXY_PORT || 8080);
+app.listen(process.env.RECONCILIATION_PROXY_PORT || 8080, 'localhost');
