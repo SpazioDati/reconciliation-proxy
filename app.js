@@ -45,7 +45,7 @@ var output_format = function (body) {
   };
 };
 
-var process_query = function (query, res) {
+var process_query = function (query, res, single_query) {
   var functions = [];
 
   if (typeof(query) === 'string') {
@@ -62,7 +62,7 @@ var process_query = function (query, res) {
     if (err)
       return;
 
-    if (results.length === 1) {
+    if (single_query) {
       if (results[0].statusCode >= 200 && results[0].statusCode <= 299) {
         res.jsonp(output_format(results[0].body));
       }
@@ -97,10 +97,10 @@ app.all('/reconcile', function(req, res) {
     catch (e) {
       url = query;
     }
-    process_query(url, res);
+    process_query(url, res, true);
   }
   else if (queries) {
-    process_query(JSON.parse(queries), res);
+    process_query(JSON.parse(queries), res, false);
   }
   else
     res.jsonp({
